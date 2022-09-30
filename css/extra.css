@@ -1,0 +1,27 @@
+.processing {
+  opacity: 0.3;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+video {
+  clear: both;
+  display: block;
+  background: #000000;
+  width: 640px;
+  height: 480px;
+}
+
+#status {
+  z-index: 1;
+  position: absolute;
+  left: 0px;
+  bottom: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+button {
+  padding: 10px;
+  float: left;
+  margin: 5px 5px 5px 5px;
+}

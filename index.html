@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta name="description" content="Teachable Machine" />
+    <meta name="author" content="Francesco Natali" />
+    <title>Teachable Machine</title>
+    <link rel="preload" href="./css/tailwind.css" as="style" />
+    <link rel="stylesheet" href="./css/tailwind.css" />
+    <link rel="preload" href="./css/extra.css" as="style" />
+    <link rel="stylesheet" href="css/extra.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Permanent+Marker&amp;display=swap&amp;text=↑→↓←"
+      rel="stylesheet"
+    />
+    <!-- TensorFlowJS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"
+      type="text/javascript"
+    ></script>
+    <!-- ML model & logic -->
+    <script type="module" src="./model/model.js"></script>
+  </head>
+  <body>
+    <div>
+      <div>
+        <div class="bg-gray-20 from-gray-20 py-2"></div>
+        <div
+          class="border-b border-gray-30/0 w-full md:my-4 py-6 md:py-2 bg-white/80 backdrop-blur sticky top-0 z-10 transition-colors"
+        >
+          <header
+            class="px-6 sm:px-8 container mx-auto relative flex items-center"
+          >
+            <div>
+              <!-- avatar from github -->
+              <img
+                src="https://avatars.githubusercontent.com/u/34441930?v=4"
+                alt="Francesco"
+                class="w-8 h-8 rounded-full"
+              />
+            </div>
+            <nav class="fixed flex-1 inset-0 md:block relative z-10">
+              <ul>
+                <li class="md:mx-4 md:pb-0 md:pt-0 mx-2">
+                  by Francesco Natali
+                </li>
+              </ul>
+            </nav>
+            <nav class="justify-end">
+              <ul class="md:flex md:items-center">
+                <li>
+                  <a
+                    href="https://github.com/francesconatali/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="block border focus:ring-0 hover:bg-gray-90 hover:border-gray-90 hover:text-white px-4 py-2 rounded text-center text-gray-90"
+                    >View on GitHub</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </header>
+        </div>
+        <main>
+          <section
+            class="container gap-x-8 gap-y-6 grid lg:pb-64 lg:pt-32 md:text-center mx-auto pb-16 pt-8 px-6 sm:gap-y-12 sm:grid sm:grid-cols-12 sm:pb-32 sm:pt-16 sm:px-8"
+          >
+            <h1
+              class="sm:col-start-1 sm:col-end-13 xl:col-start-3 xl:col-end-11 text-5xl sm:text-7xl md:text-8xl md:leading-none font-bold text-gray-90"
+            >
+              Teachable Machine
+            </h1>
+            <div
+              class="text-xl sm:text-2xl text-gray-70 sm:col-start-1 sm:col-end-13 lg:col-start-3 lg:col-end-11 pb-16"
+            >
+              Train a convolutional neural network to recognise images, live in
+              the browser. Try it out! 👇🏻
+            </div>
+            <div class="col-span-full" style="position: relative">
+              <video
+                id="webcam"
+                class="shadow-2xl w-full"
+                style="border-radius: 8px"
+                autoplay
+              ></video>
+              <div
+                id="status"
+                class="bg-white/80 sm:text-2xl text-gray-80 text-xl w-full"
+              >
+                Enable webcam to start
+              </div>
+            </div>
+            <div id="buttons" class="col-span-full pt-8">
+              <div>
+                <button
+                  class="dataCollector bg-darkBlue-60 dataCollector font-bold hover:bg-darkBlue-50 px-4 text-white rounded focus:ring-0"
+                  data-1hot="0"
+                  data-name="Class 1"
+                >
+                  Gather Images for Class 1
+                </button>
+
+                <button
+                  class="dataCollector bg-darkBlue-60 dataCollector font-bold hover:bg-darkBlue-50 px-4 text-white rounded focus:ring-0"
+                  data-1hot="1"
+                  data-name="Class 2"
+                >
+                  Gather Images for Class 2
+                </button>
+              </div>
+              <div style="float: right">
+                <button
+                  id="train"
+                  class="bg-darkBlue-60 font-bold hover:bg-darkBlue-50 px-4 text-white rounded processing focus:ring-0"
+                >
+                  Train &amp; Predict!
+                </button>
+
+                <button
+                  id="reset"
+                  class="bg-darkBlue-60 font-bold hover:bg-darkBlue-50 px-4 text-white rounded focus:ring-0"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </section>
+          <div class="bg-gray-10">
+            <section
+              class="sm:grid sm:grid-cols-12 gap-x-8 px-6 sm:px-8 pt-24 sm:pt-48 pb-24 sm:pb-48 lg:pb-64 container mx-auto gap-8 lg:gap-12 grid"
+            >
+              <h2
+                class="text-4xl sm:text-7xl whitespace-pre-line font-bold sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-12"
+              >
+                How to use it
+              </h2>
+              <p
+                class="text-xl sm:text-2xl sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-9 text-gray-70"
+              >
+                1. Click on the buttons to gather images while moving an object
+                in front of the webcam. Each class represents a different
+                object. For a better result, try to gather a similar number of
+                images for each class.
+                <br /><br />
+                2. Click on the "Train & Predict!" button to train the model and
+                start predicting. You can follow the training progress in the
+                console.
+                <br /><br />
+                3. Click on the "Reset" button to start over, trying different
+                objects and conditions to see how the model performs.
+                <br /><br />
+                4. Enjoy! 🙂
+              </p>
+            </section>
+          </div>
+          <section class="bg-gray-20 py-2"></section>
+          <section
+            class="sm:grid sm:grid-cols-12 gap-x-8 px-6 sm:px-8 pt-24 sm:pt-48 pb-24 container mx-auto gap-8 lg:gap-12 grid"
+          >
+            <h2
+              class="text-4xl sm:text-7xl whitespace-pre-line font-bold sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-12"
+            >
+              How does it work?
+            </h2>
+            <p
+              class="text-xl sm:text-2xl sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-9 text-gray-70"
+            >
+              Under the hood, Teachable Machine uses a technique called
+              <span class="text-gray-80 font-semibold">transfer learning</span>.
+              This means leveraging the power of a pre-trained model to solve a
+              new problem, without needing a lot of data and much quicker.<br /><br />
+              In this example there are only two classes to be recognised, but
+              the model can be trained for many more if required, and the code
+              in this project can be easily adapted for it.
+            </p>
+          </section>
+          <section
+            class="sm:grid sm:grid-cols-12 gap-x-8 px-6 sm:px-8 pt-24 pb-24 sm:pb-48 lg:pb-64 container mx-auto gap-8 lg:gap-12 grid"
+          >
+            <h2
+              class="text-4xl sm:text-7xl whitespace-pre-line font-bold sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-12"
+            >
+              About the model
+            </h2>
+            <p
+              class="text-xl sm:text-2xl sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-9 text-gray-70"
+            >
+              The model used in this project is
+              <span class="text-gray-80 font-semibold">MobileNet</span>, a
+              convolutional neural network that is 17 layers deep. The model is
+              trained using
+              <span class="text-gray-80 font-semibold">Keras</span>, a
+              high-level neural networks API, written in Python and capable of
+              running on top of TensorFlow. <br /><br />
+              A pre-trained version of the network is loaded directly from
+              <a
+                href="https://tfhub.dev/"
+                target="_blank"
+                class="font-semibold text-lightBlue-80"
+                >TFHub</a
+              >. The pre-trained network is then used to extract high-level
+              features from new images (here taken directly from a webcam) so
+              you can create your very own classifier!
+            </p>
+          </section>
+          <div class="bg-gray-10">
+            <section
+              class="sm:grid sm:grid-cols-12 gap-x-8 px-6 sm:px-8 pt-24 pb-24 sm:pb-48 container mx-auto gap-8 lg:gap-12 grid"
+            >
+              <h2
+                class="text-4xl sm:text-7xl whitespace-pre-line font-bold sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-12"
+              >
+                Future improvements 🚀
+              </h2>
+              <p
+                class="text-xl sm:text-2xl sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-9 text-gray-70"
+              >
+                Currently this project only supports images. In the future, I'd
+                like to add support to audio and poses as well. If you'd like to
+                contribute, please feel free to get in touch and/or open a pull
+                request on
+                <a
+                  href="https://github.com/francesconatali/"
+                  target="_blank"
+                  class="font-semibold text-lightBlue-80"
+                  >GitHub</a
+                >.
+              </p>
+            </section>
+          </div>
+          <section
+            class="sm:grid sm:grid-cols-12 gap-x-8 px-6 sm:px-8 pt-24 pb-24 sm:pb-48 lg:pb-64 container mx-auto gap-8 lg:gap-12 grid"
+          >
+            <h2
+              class="text-4xl sm:text-7xl whitespace-pre-line font-bold sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-12"
+            >
+              Open source
+            </h2>
+            <p
+              class="text-xl sm:text-2xl sm:col-start-1 sm:col-end-13 lg:col-start-2 lg:col-end-9 text-gray-70"
+            >
+              The entire code and files are available on
+              <a
+                href="https://github.com/francesconatali/"
+                target="_blank"
+                class="font-semibold text-lightBlue-80"
+                >GitHub</a
+              >, feel free to have a look.
+            </p>
+          </section>
+        </main>
+        <footer class="md:py-12 py-6 xl:py-16">
+          <div class="container mx-auto px-6 sm:px-8">
+            <div class="flex flex-col sm:flex-row items-baseline mt-4">
+              <p class="flex-1 text-gray-70">
+                Powered by&nbsp;
+                <img
+                  src="./img/tensorflow.png"
+                  alt="TensorFlow"
+                  class="h-6 inline-block"
+                />
+              </p>
+              <nav class="mt-4 sm:mt-0">
+                <ul class="flex flex-row flex-wrap sm:flex-nowrap">
+                  <li class="mr-2 md:mr-4 lg:mr-8">
+                    <a
+                      class="text-gray-70 hover:text-gray-60"
+                      href="https://francesconatali.com/"
+                      target="_blank"
+                      >Website</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="text-gray-70 hover:text-gray-60"
+                      href="mailto:contact@francesconatali.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >Contact</a
+                    >
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
