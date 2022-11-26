@@ -33,3 +33,5 @@ A pre-trained version of the network is loaded directly from TFHub. The pre-trai
 #### Future improvements 🚀
 
 Currently this project only supports images. In the future, I'd like to add support to audio and poses as well. If you'd like to contribute, please feel free to get in touch and/or open a pull request here on GitHub.
+
+Also, this project can be easily adapted to create a home version of Face ID. Instead of feeding MobileNet with the entire image, a second model, or simply a face recognition API (like Face API, itself based on TensorFlowJS), can be used to detect and crop a human face to feed the model with that only, refining the classification.
